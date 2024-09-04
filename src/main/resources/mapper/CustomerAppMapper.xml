@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgc.mapper.CustomerAppMapper">
+    <insert id="submitExam">
+        INSERT INTO t_exam_grading (exam_id, student_id, submission_time)
+                         VALUES (#{examId}, #{studentId}, NOW())
+    </insert>
+    <update id="saveNowQuestion">
+        update t_exam_question set content = #{answer}, img = #{img}
+        where exam_id = #{examId} and
+              student_id = #{studentId} and
+              question_id = #{questionId}
+
+    </update>
+
+
+    <select id="findAll" resultType="com.sgc.entity.Exam">
+        select * from t_exam where id in (
+            select distinct exam_id from t_exam_question where student_id = #{studentId} and status &lt;&gt; 1
+            )
+    </select>
+    <select id="getQuestionIdsByStudentIdAndExamId" resultType="java.lang.Integer">
+        select question_id from t_exam_question where exam_id = #{examId} and student_id = #{studentId}
+    </select>
+    <select id="getQuestionsByIds" resultType="com.sgc.entity.Question">
+        select * from t_question where id in
+         <foreach collection="questionIds" item="id" open="(" separator="," close=")">
+             #{id}
+         </foreach>
+    </select>
+    <select id="getExamInfoById" resultType="com.sgc.entity.Exam">
+        select * from t_exam where id = #{examId}
+    </select>
+    <select id="getNowQuestionInfoById" resultType="com.sgc.entity.ExamQuestion">
+        select * from t_exam_question where exam_id = #{examId} and
+                                            student_id = #{studentId} and
+                                            question_id = #{questionId}
+    </select>
+    <select id="getNowQuestionAnswerByExamIdAndStudentIdAndQuestionId" resultType="java.lang.String">
+        select content from t_exam_question
+        where exam_id = #{examId} and student_id = #{studentId} and question_id = #{questionId}
+
+    </select>
+    <select id="findAbleToSubmit" resultType="com.sgc.entity.ExamGrading">
+        select * from t_exam_grading where student_id = #{studentId} and exam_id = #{examId}
+    </select>
+    <select id="getSubmissionTime" resultType="java.lang.String">
+        select submission_time from t_exam_grading where student_id=#{studentId}
+                                                    and exam_id = #{examId}
+    </select>
+    <select id="findStudentById" resultType="com.sgc.entity.Student">
+        select * from t_student where student_id = #{studentId}
+    </select>
+    <select id="getQuestionContent" resultType="java.lang.String">
+        select content from t_question where id = #{questionId}
+    </select>
+    <select id="getNowQuestionImgByExamIdAndStudentIdAndQuestionId" resultType="java.lang.String">
+        select img from t_exam_question where exam_id = #{examId} and
+                                              student_id = #{studentId} and
+                                              question_id = #{questionId}
+    </select>
+</mapper>
+

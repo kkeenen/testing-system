@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgc.mapper.StudentMapper">
+    <insert id="add">
+        INSERT INTO t_student (student_id, name, class_name, gender, phone, qq, major, entry_date)
+        VALUES (#{studentId}, #{name}, #{className}, #{gender}, #{phone}, #{qq}, #{major}, CURRENT_DATE)
+    </insert>
+    <insert id="addToUser">
+        insert into t_user (username, password)
+            values (#{studentId}, "P/aSmlSxcVKIlOveMyi+BBUHLO0KJhNHmlTXogLcW7CtqVHvXF/ec+wUZAqPdkP3")
+    </insert>
+    <update id="edit">
+        UPDATE t_student
+        SET student_id = #{studentId},
+            name = #{name},
+            class_name = #{className},
+            gender = #{gender},
+            phone = #{phone},
+            qq = #{qq},
+            major = #{major}
+        WHERE id = #{id}
+    </update>
+    <update id="resetStudentClassByClassName">
+        update t_student set class_name = null
+                    where class_name = #{className}
+    </update>
+    <delete id="deleteByIds">
+        DELETE FROM t_student
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+    <select id="findAll" resultType="com.sgc.entity.Student">
+        SELECT * FROM t_student
+            LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+    <select id="findCount" resultType="java.lang.Integer">
+        select count(*) from t_student
+    </select>
+    <select id="findClasses" resultType="java.lang.String">
+        select distinct class_name from t_classes
+    </select>
+
+
+    <!-- 获取分页数据 -->
+    <select id="findByCondition" resultType="com.sgc.entity.Student">
+        SELECT *
+        FROM t_student
+        <where>
+            <if test="student.studentId != null and student.studentId != ''">
+                AND student_id = #{student.studentId}
+            </if>
+            <if test="student.name != null and student.name != ''">
+                AND name LIKE CONCAT('%', #{student.name}, '%')
+            </if>
+
+            <if test="student.qq != null and student.qq != ''">
+                AND qq = #{student.qq}
+            </if>
+
+            <if test="student.className != null and student.className != ''">
+                AND class_name = #{student.className}
+            </if>
+        </where>
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+    <select id="findAllStudentsByClassName" resultType="com.sgc.entity.Student">
+        select * from t_student
+                 where class_name in
+                 <foreach collection="classNameList" item="name" open="(" separator="," close=")">
+                     #{name}
+                 </foreach>
+
+    </select>
+    <select id="getMaleCount" resultType="java.lang.Integer">
+        select count(*) from t_student where gender = "男"
+    </select>
+    <select id="getFemaleCount" resultType="java.lang.Integer">
+        select count(*) from t_student where gender = "女"
+    </select>
+    <select id="getAllMajor" resultType="java.lang.String">
+        select distinct major from t_student
+    </select>
+    <select id="getMajorCount" resultType="java.lang.Integer">
+        select count(*) from t_student where major = #{major}
+    </select>
+
+
+</mapper>

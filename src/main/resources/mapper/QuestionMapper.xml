@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgc.mapper.QuestionMapper">
+
+    <select id="findAll" resultType="com.sgc.entity.Question">
+        select * from t_question limit #{pageSize} offset #{offset}
+    </select>
+    <select id="findFields" resultType="java.lang.String">
+        select distinct field from t_question
+    </select>
+    <select id="findAllCount" resultType="java.lang.Long">
+        select count(*) from t_question
+    </select>
+
+    <select id="findByCondition" resultType="com.sgc.entity.Question">
+        select * from t_question
+        <where>
+            <if test="question.id != null and question.id != ''">
+                and id = #{question.id}
+            </if>
+            <if test="question.content != null and question.content != ''">
+                and content = #{question.content}
+            </if>
+            <if test="question.referenceAnswer != null and question.referenceAnswer != ''">
+                and reference_answer = #{question.referenceAnswer}
+            </if>
+            <if test="question.field != null and question.field != ''">
+                and field = #{question.field}
+            </if>
+        </where>
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="findByConditionCount" resultType="java.lang.Long">
+        select count(*) from t_question
+        <where>
+            <if test="question.id != null and question.id != ''">
+                and id = #{question.id}
+            </if>
+            <if test="question.content != null and question.content != ''">
+                and content = #{question.content}
+            </if>
+            <if test="question.referenceAnswer != null and question.referenceAnswer != ''">
+                and reference_answer = #{question.referenceAnswer}
+            </if>
+            <if test="question.field != null and question.field != ''">
+                and field = #{question.field}
+            </if>
+        </where>
+    </select>
+    <select id="getContentByQuestionId" resultType="java.lang.String">
+        select content from t_question where id = #{questionId}
+    </select>
+    <select id="findAllWithoutPage" resultType="com.sgc.entity.Question">
+        select * from t_question
+    </select>
+    <select id="findFieldsById" resultType="java.lang.String">
+        select field from t_question
+        where id = #{questionId}
+    </select>
+
+    <insert id="add">
+        insert into t_question (content, reference_answer, field)
+                        values (#{content}, #{referenceAnswer}, #{field})
+    </insert>
+    <update id="edit">
+        update t_question set
+                content = #{content},
+                reference_answer = #{referenceAnswer},
+                field = #{field}
+        where id = #{id}
+    </update>
+    <delete id="deleteByIds">
+        delete from t_question
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

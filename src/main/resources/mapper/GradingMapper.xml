@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgc.mapper.GradingMapper">
+    <update id="submitGrading">
+        update t_exam_question set score = #{score}
+        where exam_id = #{examId} and
+              student_id = #{studentId} and
+              question_id = #{questionId}
+    </update>
+    <update id="updateGradingTimeAndTotalScoreByStudentIdAndExamId">
+        update t_exam_grading set grading_time=NOW(), total_score=#{totalScore}
+        where exam_id = #{examId} and student_id = #{studentId}
+    </update>
+
+
+    <select id="getStudentIdsByExamId" resultType="java.lang.String">
+        select distinct student_id from t_exam_question where exam_id = #{examId}
+    </select>
+    <select id="getStudentsByIds" resultType="com.sgc.entity.Student">
+        select * from t_student where
+        student_id in
+        <foreach collection="studentIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="getQuestionIdsByExamIdAndStudentId" resultType="java.lang.String">
+        select question_id from t_exam_question where exam_id = #{examId} and student_id = #{studentId}
+    </select>
+    <select id="getQuestionById" resultType="java.lang.String">
+        select content from t_question where id = #{id}
+    </select>
+    <select id="getScoreByExamIdAndStudentIdAndQuestionId" resultType="java.lang.Double">
+        select score from t_exam_question where exam_id = #{examId}
+                                            and student_id = #{studentId}
+                                            and question_id = #{questionId}
+    </select>
+    <select id="getScoresByExamIdAndStudentId" resultType="java.lang.String">
+        select score from t_exam_question where exam_id = #{examId}
+                                        and student_id = #{studentId}
+    </select>
+</mapper>

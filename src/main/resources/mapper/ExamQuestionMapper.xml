@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgc.mapper.ExamQuestionMapper">
+<!--    exam_id, student_id, question_id, content, score-->
+    <insert id="setExamAndStudentAndQuestions">
+        insert into t_exam_question (exam_id, student_id, question_id)
+                    values (#{examId}, #{studentId}, #{questionId})
+    </insert>
+    <delete id="deleteOriginData">
+        delete from t_exam_question
+        where exam_id = #{examId} and
+              student_id in
+        <foreach collection="studentIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="findAll" resultType="com.sgc.entity.ExamQuestion">
+        select distinct question_id,content from t_exam_question
+    </select>
+    <select id="findAllCount" resultType="java.lang.Long">
+        select distinct count(question_id,content) from t_exam_question
+    </select>
+    <select id="findByCondition" resultType="com.sgc.entity.ExamQuestion">
+        SELECT distinct question_id,content
+        FROM t_exam_question
+        <where>
+            <if test="examQuestion.examId != null and examQuestion.examId != ''">
+                AND exam_id = #{examQuestion.examId}
+            </if>
+            <if test="examQuestion.questionId != null and examQuestion.questionId != ''">
+                AND question_id = #{examQuestion.questionId}
+            </if>
+            <if test="examQuestion.studentId != null and examQuestion.studentId != ''">
+                AND student_id = #{examQuestion.studentId}
+            </if>
+            <if test="examQuestion.score != null and examQuestion.score != ''">
+                AND score = #{examQuestion.score}
+            </if>
+            <if test="examQuestion.content != null and examQuestion.content != ''">
+                AND content = #{examQuestion.content}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByConditionCount" resultType="java.lang.Long">
+        SELECT distinct count(question_id,content)
+        FROM t_exam_question
+        <where>
+            <if test="examQuestion.examId != null and examQuestion.examId != ''">
+                AND exam_id = #{examQuestion.examId}
+            </if>
+            <if test="examQuestion.questionId != null and examQuestion.questionId != ''">
+                AND question_id = #{examQuestion.questionId}
+            </if>
+            <if test="examQuestion.studentId != null and examQuestion.studentId != ''">
+                AND student_id = #{examQuestion.studentId}
+            </if>
+            <if test="examQuestion.score != null and examQuestion.score != ''">
+                AND score = #{examQuestion.score}
+            </if>
+            <if test="examQuestion.content != null and examQuestion.content != ''">
+                AND content = #{examQuestion.content}
+            </if>
+        </where>
+    </select>
+    <select id="toGetQuestionIdsByExamId" resultType="java.lang.Integer">
+        select distinct question_id from t_exam_question where exam_id=#{examId}
+    </select>
+    <select id="getCountOfQuestionsByExamId" resultType="java.lang.Integer">
+        select count(distinct question_id) from t_exam_question where exam_id = #{id}
+    </select>
+
+
+</mapper>
+

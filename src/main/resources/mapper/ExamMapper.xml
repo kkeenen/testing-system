@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgc.mapper.ExamMapper">
+
+    <select id="findAll" resultType="com.sgc.entity.Exam">
+        select * from t_exam limit #{pageSize} offset #{offset}
+    </select>
+    <select id="findAllCount" resultType="java.lang.Long">
+        select count(*) from t_exam
+    </select>
+    <select id="findByCondition" resultType="com.sgc.entity.Exam">
+        select * from t_exam
+        <where>
+            <if test="exam.id != null and exam.id != ''">
+                and id = #{exam.id}
+            </if>
+            <if test="exam.title != null and exam.title != ''">
+                and title LIKE CONCAT('%', #{exam.title}, '%')
+            </if>
+            <if test="exam.facedClass != null and exam.facedClass != ''">
+                and faced_class LIKE CONCAT('%', #{exam.facedClass}, '%')
+            </if>
+            <if test="exam.status != null and exam.status != ''">
+                and status = #{exam.status}
+            </if>
+            <if test="exam.startTime != null and exam.startTime != ''">
+                and start_time = #{exam.startTime}
+            </if>
+            <if test="exam.endTime != null and exam.endTime != ''">
+                and end_time = #{endTime}
+            </if>
+
+        </where>
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+    <select id="findByConditionCount" resultType="java.lang.Long">
+        select count(*) from t_exam
+        <where>
+            <if test="exam.id != null and exam.id != ''">
+                and id = #{exam.id}
+            </if>
+            <if test="exam.title != null and exam.title != ''">
+                and title = #{exam.title}
+            </if>
+            <if test="exam.facedClass != null and exam.facedClass != ''">
+                and faced_class = #{exam.facedClass}
+            </if>
+            <if test="exam.status != null and exam.status != ''">
+                and status = #{exam.status}
+            </if>
+            <if test="exam.startTime != null and exam.startTime != ''">
+                and start_time &gt; #{exam.startTime}
+            </if>
+            <if test="exam.endTime != null and exam.endTime != ''">
+                and end_time &lt; #{endTime}
+            </if>
+
+        </where>
+    </select>
+    <select id="getById" resultType="com.sgc.entity.Exam">
+        select * from t_exam where id = #{examId}
+    </select>
+    <select id="findCountOfStudentsByExamId" resultType="java.lang.Integer">
+        select count(distinct student_id) from t_exam_question where exam_id = #{examId}
+    </select>
+    <select id="findCountOfSubmitStudentsByExamId" resultType="java.lang.Integer">
+        select count(distinct student_id) from t_exam_question where exam_id = #{examId} and not content is null
+    </select>
+    <select id="findCountOfGradedStudentsByExamId" resultType="java.lang.Integer">
+        select count(*) from t_exam_grading where exam_id = #{examId} and not grading_time is null
+    </select>
+    <select id="getCountOfSentExam" resultType="java.lang.Integer">
+        select count(*) from t_exam where status = 2
+    </select>
+    <select id="findCountByClassName" resultType="java.lang.Integer">
+        select count(*) from t_exam where faced_class like CONCAT('%', #{className}, '%')
+    </select>
+
+    <insert id="add">
+        insert into t_exam (title, faced_class, start_time, end_time)
+        values (#{title}, #{facedClass}, #{startTime}, #{endTime})
+    </insert>
+    <update id="edit">
+        update t_exam set
+                          title = #{title},
+                          start_time = #{startTime},
+                          faced_class = #{facedClass},
+                          end_time = #{endTime}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByIds">
+        delete from t_exam
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="sendExam">
+        update t_exam set
+            status = 2
+        where id = #{examId}
+    </update>
+</mapper>
+
