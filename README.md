@@ -14,6 +14,9 @@
 # 学生端(手机端)
 主界面
 ![image](https://github.com/user-attachments/assets/e0084eb4-f6a2-47d0-b76e-9a277c068b2e)
+![image](https://github.com/user-attachments/assets/d837d397-9b90-40ba-8d6a-523cb5bec45b)
+![image](https://github.com/user-attachments/assets/f05cb1e1-3e32-4fcb-97aa-97b235bc33fd)
+
 
 # 学生端(电脑端)
 登陆页
