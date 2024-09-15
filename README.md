@@ -6,7 +6,9 @@
 数据统计
 ![image](https://github.com/user-attachments/assets/72e4c338-91a9-49e0-8221-74af657f83a4)
 数据详情
-![image](https://github.com/user-attachments/assets/a4477d56-0a86-44d9-933f-4b1a9fdd67d8)
+![image](https://github.com/user-attachments/assets/32f296c8-b36b-44fa-8af5-3a2cff260f70)
+![image](https://github.com/user-attachments/assets/8ea0d5e2-5d68-4ee9-9070-ffcde776a1a0)
+
 批改试卷
 ![image](https://github.com/user-attachments/assets/9e452beb-6b4d-4903-9673-f335d17ea6ab)
 ![image](https://github.com/user-attachments/assets/26bffa54-9d57-4e99-b803-d8b8c94de310)
